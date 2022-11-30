@@ -68,9 +68,11 @@ a {
 </template>
 
 <script>
+
 export default {
   data() {
     return {
+      timer: null,
       ruleForm: {// 初始化ruleForm对象
         username: '',
         password: '',
@@ -100,8 +102,8 @@ export default {
             if (responseBody.state == 20000) {
               this.$message.success("登录成功!")
               let ruleFormString = JSON.stringify(this.ruleForm.username);
-              localStorage.setItem('ruleForm',ruleFormString);
-              this.$router.push("/?username="+this.ruleForm.username)
+              localStorage.setItem('ruleForm', ruleFormString);
+              this.$router.push("/?username=" + this.ruleForm.username)
             } else {
               this.$message.error(responseBody.message);
             }
@@ -117,21 +119,31 @@ export default {
       location.href = 'https://gitee.com/oauth/authorize?\n' +
           'client_id=b17799109ce3107be91362aa3130ac2408e02d1f0725cefbe8abf858a4ba3f8c&\n' +
           'redirect_uri=http://localhost:8801/git/getToken.html&response_type=code&state=200';
+      let num = 0;
+      while (num % 2 == 0) {
+        console.log(num);
+        this.submitSso();
+        num++;
+      }
+    },
+    submitSso() {
       let url = 'http://localhost:8801/git/getInfo';
       this.axios.get(url).then((response) => {
         let responseBody = response.data;
-        if (responseBody.state = 20000) {
-          console.log("请求已经发送!")
-          location.href='/';
-        } else {
-          this.$message.error(responseBody.message);
+        if (responseBody.data.id != null) {
+          if (responseBody.state = 20000) {
+            console.log("请求已经发送!")
+            location.href = '/';
+          } else {
+            this.$message.error(responseBody.message);
+          }
         }
       })
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
     }
-  }
+  },
 }
 </script>
 
