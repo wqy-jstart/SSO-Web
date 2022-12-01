@@ -95,7 +95,12 @@ export default {
     submitTrue(){
       let url = 'http://localhost:8801/users/login';
       let ruleFormString = this.qs.stringify(this.ruleForm);
-      this.axios.post(url,ruleFormString).then((response)=>{
+      this.axios
+          .create({
+            'headers': {
+              'Authorization': localStorage.getItem('jwt')
+            }
+          }).post(url,ruleFormString).then((response)=>{
         let responseBody = response.data;
         if (responseBody.state == 20000){
           this.bind();
@@ -108,7 +113,12 @@ export default {
     binding(){
       let url = 'http://localhost:8801/git/insert';
       let gitUserString = this.qs.stringify(this.gitUser);
-      this.axios.post(url, gitUserString).then((response) => {
+      this.axios
+          .create({
+            'headers': {
+              'Authorization': localStorage.getItem('jwt')
+            }
+          }).post(url, gitUserString).then((response) => {
         let responseBody = response.data;
         if (responseBody.state == 20000) {
           this.$message.success("绑定成功!")
@@ -120,7 +130,12 @@ export default {
     // 处理绑定时将gitee用户信息保存到数据库中
     bind() {
       let url1 = 'http://localhost:8801/users/selectByUsername?username=' + this.ruleForm.username;
-      this.axios.get(url1).then((response) => {
+      this.axios
+          .create({
+            'headers': {
+              'Authorization': localStorage.getItem('jwt')
+            }
+          }).get(url1).then((response) => {
         let responseBody = response.data;
         if (responseBody.state = 20000) {
           this.gitUser.userId = responseBody.data.id;
@@ -134,7 +149,12 @@ export default {
     // 根据gitee的用户名去后端数据库中查询是否存在,如果不存在提示绑定
     selectByLogin(){
       let url = 'http://localhost:8801/git/selectLogin?name=' + this.gitUser.login;
-      this.axios.get(url).then((response)=>{
+      this.axios
+          .create({
+            'headers': {
+              'Authorization': localStorage.getItem('jwt')
+            }
+          }).get(url).then((response)=>{
         let responseBody = response.data;
         if (responseBody.data == null&&this.gitUser.login !=null){
           this.dialogFormVisible = true;// 如果没有数据说明未绑定,提示弹框进行绑定!
@@ -146,7 +166,12 @@ export default {
       this.code= location.search.split("=")[1];
       // 拿到code后,利用code向后端发送请求,拿用户数据
       let url = 'http://localhost:8801/git/getInfo?code='+this.code+'&state=200';
-      this.axios.get(url).then((response)=>{
+      this.axios
+          .create({
+            'headers': {
+              'Authorization': localStorage.getItem('jwt')
+            }
+          }).get(url).then((response)=>{
         let responseBody = response.data;
         if (responseBody.state =20000){
           this.gitUser = responseBody.data;// 拿到用户数据
@@ -159,7 +184,12 @@ export default {
     getUserInfo(){
       //发请求回去本地登录用户信息
       let url1 = 'http://localhost:8801/users/selectByUsername' + location.search;
-      this.axios.get(url1).then((response) => {
+      this.axios
+          .create({
+            'headers': {
+              'Authorization': localStorage.getItem('jwt')
+            }
+          }).get(url1).then((response) => {
         let responseBody = response.data;
         if (responseBody.state = 20000) {
           this.localUser = responseBody.data;

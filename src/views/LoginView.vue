@@ -99,6 +99,10 @@ export default {
             let responseBody = response.data;
             if (responseBody.state == 20000) {
               this.$message.success("登录成功!")
+              let jwt = responseBody.data;
+              console.log('登陆成功,服务器响应JWT:'+jwt);
+              localStorage.setItem('jwt',jwt);
+              console.log('已经将JWT保存到localStorage中')
               let ruleFormString = JSON.stringify(this.ruleForm.username);
               this.$router.push("/?username=" + this.ruleForm.username)
             } else {
@@ -117,20 +121,6 @@ export default {
       let redirectUri = 'http://localhost:8802/';
       location.href = 'https://gitee.com/oauth/authorize?client_id='+clientId+'&redirect_uri='+redirectUri+'&response_type=code';
 
-    },
-    submitSso() {
-      let url = 'http://localhost:8801/git/getInfo';
-      this.axios.get(url).then((response) => {
-        let responseBody = response.data;
-        if (responseBody.data.id != null) {
-          if (responseBody.state = 20000) {
-            console.log("请求已经发送!")
-            location.href = '/';
-          } else {
-            this.$message.error(responseBody.message);
-          }
-        }
-      })
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
