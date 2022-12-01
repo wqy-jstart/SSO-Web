@@ -58,9 +58,7 @@ a {
               </a>
               <span style="margin-bottom: 5px">使用Gitee登录</span>
             </el-form-item>
-
           </el-form>
-
         </el-card>
       </el-main>
     </el-container>
@@ -102,7 +100,6 @@ export default {
             if (responseBody.state == 20000) {
               this.$message.success("登录成功!")
               let ruleFormString = JSON.stringify(this.ruleForm.username);
-              localStorage.setItem('ruleForm', ruleFormString);
               this.$router.push("/?username=" + this.ruleForm.username)
             } else {
               this.$message.error(responseBody.message);
@@ -116,15 +113,10 @@ export default {
     },
     // 处理第三方登录事件
     sso() {
-      location.href = 'https://gitee.com/oauth/authorize?\n' +
-          'client_id=b17799109ce3107be91362aa3130ac2408e02d1f0725cefbe8abf858a4ba3f8c&\n' +
-          'redirect_uri=http://localhost:8801/git/getToken.html&response_type=code&state=200';
-      let num = 0;
-      while (num % 2 == 0) {
-        console.log(num);
-        this.submitSso();
-        num++;
-      }
+      let clientId = 'b17799109ce3107be91362aa3130ac2408e02d1f0725cefbe8abf858a4ba3f8c';
+      let redirectUri = 'http://localhost:8802/';
+      location.href = 'https://gitee.com/oauth/authorize?client_id='+clientId+'&redirect_uri='+redirectUri+'&response_type=code';
+
     },
     submitSso() {
       let url = 'http://localhost:8801/git/getInfo';
